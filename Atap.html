@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Energy Calculator - TNB ATAP Scheme</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Solar Energy Calculator - TNB ATAP Scheme</h1>
+                <p class="hero-subtitle">Calculate your potential savings with solar power and battery storage</p>
+            </div>
+        </section>
+
+        <!-- Calculator Header -->
+        <h2 class="calculator-header">Solar Energy Calculator</h2>
+        <p class="calculator-subtitle">Adjust the settings below to calculate your potential savings with solar power under the TNB ATAP scheme.</p>
+        
+        <!-- Calculator Content -->
+        <div class="schemes-container">
+            <!-- Your Energy Usage -->
+            <div class="scheme">
+                <h2 class="scheme-title">Your Energy Usage</h2>
+                
+                <div class="card">
+                    <div class="input-group">
+                        <label>Usage Input Method</label>
+                        <div class="usage-toggle">
+                            <button id="toggle-kwh" class="active">kWh</button>
+                            <button id="toggle-bill">Bill (RM)</button>
+                        </div>
+                        
+                        <div id="kwh-input" class="usage-input-group">
+                            <input type="number" id="monthly-usage" value="600" min="100" max="3000">
+                            <span class="slider-value">kWh</span>
+                        </div>
+                        
+                        <div id="bill-input" class="usage-input-group" style="display: none;">
+                            <input type="number" id="monthly-bill" value="265.80" min="50" max="2000" step="0.01">
+                            <span class="slider-value">RM</span>
+                        </div>
+                        
+                        <div class="tariff-display">
+                            Current TNB Tariff: <span class="current-tariff" id="current-tariff">RM 0.4443/kWh</span> <span class="info-icon" title="Not Include Retail Charges,SST,KWTBB">i</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="afa-rate">Automatic Fuel Adjustment (AFA) <span class="info-icon" title="Monthly adjustment rate that can change every month">i</span></label>
+                        <div class="smp-input-group">
+                            <input type="number" id="afa-rate" value="0" min="-5.00" max="5.00" step="0.01">
+                            <span class="slider-value">sen/kWh</span>
+                        </div>
+                        <p class="input-hint">
+                            AFA rate changes monthly. Current rate: -1.45 sen/kWh
+                        </p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Day / Night Usage Split</label>
+                        <div class="adjustable-slider-container">
+                            <input type="range" class="adjustable-slider" id="daytime-split-slider" 
+                                   min="0" max="100" step="10" value="30">
+                            <div class="slider-labels">
+                                <div class="slider-marker">0%</div>
+                                <div class="slider-marker">10%</div>
+                                <div class="slider-marker">20%</div>
+                                <div class="slider-marker">30%</div>
+                                <div class="slider-marker">40%</div>
+                                <div class="slider-marker">50%</div>
+                                <div class="slider-marker">60%</div>
+                                <div class="slider-marker">70%</div>
+                                <div class="slider-marker">80%</div>
+                                <div class="slider-marker">90%</div>
+                                <div class="slider-marker">100%</div>
+                            </div>
+                            <div class="slider-container">
+                                <span>Daytime</span>
+                                <span class="slider-value" id="daytime-value">30%</span>
+                                <span>Night</span>
+                                <span class="slider-value" id="night-value">70%</span>
+                            </div>
+                            <div class="self-consumption-note">
+                                <strong>Note:</strong> Self-consumption will be based on your daytime usage percentage. If you set 10% daytime usage, self-consumption will be approximately 10% of your solar generation.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="split-container">
+                        <div class="split-box">
+                            <div class="split-title">Daytime Usage</div>
+                            <div class="split-value" id="daytime-usage">6.00 kWh/day</div>
+                            <div class="monthly-usage-value" id="daytime-monthly">180.00 kWh/month</div>
+                        </div>
+                        <div class="split-box">
+                            <div class="split-title">Night Usage</div>
+                            <div class="split-value" id="night-usage">14.00 kWh/day</div>
+                            <div class="monthly-usage-value" id="night-monthly">420.00 kWh/month</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Solar System Configuration -->
+            <div class="scheme">
+                <h2 class="scheme-title">Solar System Configuration</h2>
+                
+                <div class="card">
+                    <div class="input-group">
+                        <label>Solar Panel Configuration</label>
+                        <div class="flex-container">
+                            <div class="flex-item">
+                                <label for="panel-wattage">Panel Wattage (W)</label>
+                                <input type="number" id="panel-wattage" value="650" min="300" max="800">
+                            </div>
+                            <div class="flex-item">
+                                <label for="panel-count">Number of Panels</label>
+                                <input type="number" id="panel-count" value="14" min="1" max="38">
+                                <div class="panel-limit-warning">Maximum: 38 panels</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="peak-sun-hours">Peak Sun Hours <span class="info-icon" title="Average hours of direct sunlight per day in your location">i</span></label>
+                        <div class="smp-input-group">
+                            <input type="number" id="peak-sun-hours" value="3.4" min="1" max="8" step="0.1">
+                            <span class="slider-value">hours</span>
+                        </div>
+                        <p class="input-hint">
+                            Typical values: 3-4 hours for Malaysia
+                        </p>
+                    </div>
+                    
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="result-label">Gross Solar System Capacity</span>
+                            <span class="result-value" id="system-capacity">9.10 kWp</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Daily Generation</span>
+                            <span class="result-value" id="daily-generation">30.03 kWh/day</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Monthly Generation</span>
+                            <span class="result-value" id="monthly-generation">900.90 kWh/month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="input-group">
+                        <label>Battery Storage Configuration</label>
+                        <div class="flex-container">
+                            <div class="flex-item">
+                                <label for="battery-kwh">Battery kWh</label>
+                                <select id="battery-kwh">
+                                    <option value="custom">Custom</option>
+                                    <option value="5.12" selected>5.12 kWh</option>
+                                </select>
+                                <div id="custom-battery" class="custom-battery">
+                                    <input type="number" id="custom-battery-input" placeholder="Enter custom kWh" min="1" max="50" step="0.01">
+                                </div>
+                            </div>
+                            <div class="flex-item">
+                                <label for="battery-units-nem">Number of Units</label>
+                                <input type="number" id="battery-units-nem" value="2" min="0" max="20">
+                            </div>
+                            <div class="flex-item">
+                                <label for="discharge-depth">Depth of Discharge (%)</label>
+                                <input type="number" id="discharge-depth" value="90" min="50" max="100">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="result-label">Required BESS Capacity</span>
+                            <span class="result-value" id="total-capacity">10.24 kWh</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Available Usage BESS Capacity</span>
+                            <span class="result-value" id="usable-capacity">8.70 kWh</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Stored Solar</span>
+                            <span class="result-value" id="stored-solar">8.70 kWh/day</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Night Usage Coverage</span>
+                            <span class="result-value" id="night-coverage">62.1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TNB Bill Breakdown & Solar Savings -->
+        <div class="scheme" style="grid-column: 1 / -1;">
+            <h2 class="scheme-title">TNB Bill Breakdown & Solar Savings</h2>
+            
+            <!-- TNB Bill Breakdowns Side by Side -->
+            <div class="bills-container">
+                <!-- TNB Bill Breakdown (Before Solar) -->
+                <div class="detailed-bill">
+                    <div class="detailed-bill-header">
+                        TNB Bill Breakdown (Before Solar)
+                    </div>
+                    <div class="card">
+                        <div style="overflow-x: auto;">
+                            <table class="bill-table">
+                                <thead>
+                                    <tr>
+                                        <th>Type of Charges</th>
+                                        <th class="text-right">Non-Service Tax</th>
+                                        <th class="text-right">Service Tax</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Your Usage (kWh)</td>
+                                        <td class="text-right" id="usage-non-service">600.00</td>
+                                        <td class="text-right" id="usage-service">136.30</td>
+                                        <td class="text-right" id="usage-total">736.30</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Energy (27.03 sen/kWh)</td>
+                                        <td class="text-right" id="energy-non-service">162.18</td>
+                                        <td class="text-right" id="energy-service">36.84</td>
+                                        <td class="text-right" id="energy-total">199.02</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Automatic Fuel Adjustment (AFA)</td>
+                                        <td class="text-right" id="afa-non-service">0.00</td>
+                                        <td class="text-right" id="afa-service">0.00</td>
+                                        <td class="text-right" id="afa-total">0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Capacity (4.55 sen/kWh)</td>
+                                        <td class="text-right" id="capacity-non-service">27.30</td>
+                                        <td class="text-right" id="capacity-service">6.20</td>
+                                        <td class="text-right" id="capacity-total">33.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Network (12.85 sen/kWh)</td>
+                                        <td class="text-right" id="network-non-service">77.10</td>
+                                        <td class="text-right" id="network-service">17.51</td>
+                                        <td class="text-right" id="network-total">94.61</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Retail</td>
+                                        <td class="text-right">0.00</td>
+                                        <td class="text-right" id="retail-service">10.00</td>
+                                        <td class="text-right" id="retail-total">10.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Energy Efficiency Incentive</td>
+                                        <td class="text-right" id="incentive-non-service">-3.00</td>
+                                        <td class="text-right" id="incentive-service">-0.68</td>
+                                        <td class="text-right" id="incentive-total">-3.68</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td><strong>Current Month Usage Charge (RM)</strong></td>
+                                        <td class="text-right" id="usage-charge-non-service">263.58</td>
+                                        <td class="text-right" id="usage-charge-service">69.88</td>
+                                        <td class="text-right" id="usage-charge-total">333.46</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Service Tax (ST) (8%)</td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="service-tax">5.59</td>
+                                    </tr>
+                                    <tr>
+                                        <td>KWTBB (1.6%)</td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="kwtbb">5.18</td>
+                                    </tr>
+                                    <tr class="final-total">
+                                        <td><strong>Total Before Solar Offset (RM)</strong></td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="total-before-solar">344.23</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TNB Bill Breakdown (After Solar) -->
+                <div class="detailed-bill">
+                    <div class="detailed-bill-header">
+                        TNB Bill Breakdown (After Solar)
+                    </div>
+                    <div class="card">
+                        <div style="overflow-x: auto;">
+                            <table class="bill-table">
+                                <thead>
+                                    <tr>
+                                        <th>Type of Charges</th>
+                                        <th class="text-right">Non-Service Tax</th>
+                                        <th class="text-right">Service Tax</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Your Usage (kWh)</td>
+                                        <td class="text-right" id="after-usage-non-service">420.00</td>
+                                        <td class="text-right" id="after-usage-service">95.41</td>
+                                        <td class="text-right" id="after-usage-total">515.41</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Energy (27.03 sen/kWh)</td>
+                                        <td class="text-right" id="after-energy-non-service">113.53</td>
+                                        <td class="text-right" id="after-energy-service">25.79</td>
+                                        <td class="text-right" id="after-energy-total">139.32</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Automatic Fuel Adjustment (AFA)</td>
+                                        <td class="text-right" id="after-afa-non-service">0.00</td>
+                                        <td class="text-right" id="after-afa-service">0.00</td>
+                                        <td class="text-right" id="after-afa-total">0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Capacity (4.55 sen/kWh)</td>
+                                        <td class="text-right" id="after-capacity-non-service">19.11</td>
+                                        <td class="text-right" id="after-capacity-service">4.34</td>
+                                        <td class="text-right" id="after-capacity-total">23.45</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Network (12.85 sen/kWh)</td>
+                                        <td class="text-right" id="after-network-non-service">53.97</td>
+                                        <td class="text-right" id="after-network-service">12.26</td>
+                                        <td class="text-right" id="after-network-total">66.23</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Retail</td>
+                                        <td class="text-right">0.00</td>
+                                        <td class="text-right" id="after-retail-service">10.00</td>
+                                        <td class="text-right" id="after-retail-total">10.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Energy Efficiency Incentive</td>
+                                        <td class="text-right" id="after-incentive-non-service">-2.10</td>
+                                        <td class="text-right" id="after-incentive-service">-0.48</td>
+                                        <td class="text-right" id="after-incentive-total">-2.58</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td><strong>Current Month Usage Charge (RM)</strong></td>
+                                        <td class="text-right" id="after-usage-charge-non-service">184.51</td>
+                                        <td class="text-right" id="after-usage-charge-service">51.91</td>
+                                        <td class="text-right" id="after-usage-charge-total">236.42</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Service Tax (ST) (8%)</td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="after-service-tax">4.15</td>
+                                    </tr>
+                                    <tr>
+                                        <td>KWTBB (1.6%)</td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="after-kwtbb">3.63</td>
+                                    </tr>
+                                    <tr class="final-total">
+                                        <td><strong>Total After Solar Offset (RM)</strong></td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="total-after-solar">244.20</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Saving Value, Generation Value, and ROI Tables -->
+            <div class="bills-container bills-container-3" style="margin-top: 20px;">
+                <!-- Saving Value Table -->
+                <div class="detailed-bill">
+                    <div class="detailed-bill-header">
+                        Saving Value
+                    </div>
+                    <div class="card">
+                        <div style="overflow-x: auto;">
+                            <table class="bill-table">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th class="text-right">kWh</th>
+                                        <th class="text-right">Unit Cost</th>
+                                        <th class="text-right">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background-color: #ffeb3b;">
+                                        <td><strong>Total (kWh)</strong></td>
+                                        <td class="text-right" id="saving-total-kwh" style="font-weight: 700;">720.90</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stored in BESS</td>
+                                        <td class="text-right" id="saving-stored-kwh">261.00</td>
+                                        <td class="text-right" id="saving-stored-unit-cost">0.4443</td>
+                                        <td class="text-right" id="saving-stored-value">115.96</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Exported to Grid</td>
+                                        <td class="text-right" id="saving-export-kwh">459.90</td>
+                                        <td class="text-right" id="saving-export-unit-cost">0.20</td>
+                                        <td class="text-right" id="saving-export-value">91.98</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Energy Efficiency Incentive</td>
+                                        <td class="text-right" id="saving-incentive-kwh">-</td>
+                                        <td class="text-right" id="saving-incentive-unit-cost">-</td>
+                                        <td class="text-right" id="saving-incentive-value">-3.68</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td><strong>Generation Value</strong></td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="saving-generation-value">204.26</td>
+                                    </tr>
+                                    <tr class="final-total">
+                                        <td><strong>Bill Amount</strong></td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="saving-bill-amount">39.97</td>
+                                    </tr>
+                                    <tr class="final-total" style="background-color: var(--success-light); color: var(--dark);">
+                                        <td><strong>Saving Value</strong></td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="saving-value-total">304.26</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Generation Value Without BESS Table -->
+                <div class="detailed-bill">
+                    <div class="detailed-bill-header">
+                        Generation Value Without BESS
+                    </div>
+                    <div class="card">
+                        <div style="overflow-x: auto;">
+                            <table class="bill-table">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th class="text-right">kWh</th>
+                                        <th class="text-right">Unit Cost</th>
+                                        <th class="text-right">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background-color: #ffeb3b;">
+                                        <td><strong>Total (kWh)</strong></td>
+                                        <td class="text-right" id="gen-total-kwh" style="font-weight: 700;">900.90</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Direct Consumption</td>
+                                        <td class="text-right" id="gen-direct-kwh">180.00</td>
+                                        <td class="text-right" id="gen-direct-unit-cost">0.4443</td>
+                                        <td class="text-right" id="gen-direct-value">79.97</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Exported to Grid</td>
+                                        <td class="text-right" id="gen-export-kwh">720.90</td>
+                                        <td class="text-right" id="gen-export-unit-cost">0.20</td>
+                                        <td class="text-right" id="gen-export-value">144.18</td>
+                                    </tr>
+                                    <tr class="final-total" style="background-color: var(--success-light); color: var(--dark);">
+                                        <td><strong>Generation Value</strong></td>
+                                        <td colspan="2"></td>
+                                        <td class="text-right" id="gen-total-value">224.15</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROI Calculation Table -->
+                <div class="detailed-bill">
+                    <div class="detailed-bill-header">
+                        ROI Calculation
+                    </div>
+                    <div class="card">
+                        <div style="overflow-x: auto;">
+                            <table class="roi-table">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th class="text-right">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>My Selling Price (RM)</td>
+                                        <td class="text-right">
+                                            <input type="number" id="selling-price" value="25000" min="0" step="100" style="width: 100px; text-align: right; padding: 4px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Saving Value (RM/month)</td>
+                                        <td class="text-right" id="roi-saving-value">304.26</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Saving Value (RM/year)</td>
+                                        <td class="text-right" id="roi-saving-value-year">3651.12</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td><strong>ROI (Years)</strong></td>
+                                        <td class="text-right" id="roi-years">6.85</td>
+                                    </tr>
+                                    <tr class="final-total">
+                                        <td><strong>ROI (Months)</strong></td>
+                                        <td class="text-right" id="roi-months">82.15</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="calculation-formula" style="margin-top: 10px;">
+                            Formula: <span class="formula-highlight">ROI (Years) = My Selling Price ÷ (Saving Value × 12)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="savings-breakdown">
+                <h3 class="bill-section-title">ATAP Solar Savings Calculation</h3>
+                <div class="calculation-container">
+                    <div class="calculation-row">
+                        <div class="calculation-explanation">
+                            <strong>Total Solar Generation:</strong>
+                            <div class="calculation-formula">
+                                Formula: <span class="formula-highlight">System Capacity × Peak Sun Hours × 30 days</span><br>
+                                Example: 9.10 kWp × 3.4 hours × 30 = 900.90 kWh
+                            </div>
+                        </div>
+                        <div class="calculation-value" id="solar-generation-total">900.90 kWh</div>
+                    </div>
+                    
+                    <div class="calculation-row">
+                        <div class="calculation-explanation">
+                            <strong>Self-Consumption (Daytime Usage):</strong>
+                            <div class="calculation-formula">
+                                Formula: <span class="formula-highlight">Total Generation × Self-Consumption %</span><br>
+                                Example: 900.90 kWh × 30% = 270.27 kWh
+                            </div>
+                        </div>
+                        <div class="calculation-value" id="self-consumption-kwh">270.27 kWh (30%)</div>
+                    </div>
+                    
+                    <div class="calculation-row">
+                        <div class="calculation-explanation">
+                            <strong>Battery Storage (Night Usage):</strong>
+                            <div class="calculation-formula">
+                                Formula: <span class="formula-highlight">Stored Solar × 30 days</span><br>
+                                Example: 8.70 kWh/day × 30 = 261.00 kWh
+                            </div>
+                        </div>
+                        <div class="calculation-value" id="battery-storage-kwh">261.00 kWh</div>
+                    </div>
+                    
+                    <div class="calculation-row">
+                        <div class="calculation-explanation">
+                            <strong>Exported to TNB (ATAP):</strong>
+                            <div class="calculation-formula">
+                                Formula: <span class="formula-highlight">Total Generation - Self-Consumption - Battery Storage</span><br>
+                                Example: 900.90 kWh - 270.27 kWh - 261.00 kWh = 369.63 kWh
+                            </div>
+                        </div>
+                        <div class="calculation-value" id="exported-solar">369.63 kWh</div>
+                    </div>
+                    
+                    <div class="calculation-row total-row">
+                        <div class="calculation-explanation">
+                            <strong>Direct Savings from Self-Consumption:</strong>
+                            <div class="calculation-formula">
+                                Formula: <span class="formula-highlight">Self-Consumption × Retail Tariff Rate</span><br>
+                                Example: 270.27 kWh × RM 0.443/kWh = RM 119.73
+                            </div>
+                        </div>
+                        <div class="calculation-value" id="direct-savings">RM 119.73</div>
+                    </div>
+                    
+                    <div class="calculation-row">
+                        <div class="calculation-explanation">
+                            <strong>Battery Storage Savings:</strong>
+                            <div class="calculation-formula">
+                                Formula: <span class="formula-highlight">Battery Storage × Retail Tariff Rate</span><br>
+                                Example: 261.00 kWh × RM 0.443/kWh = RM 115.62
+                            </div>
+                        </div>
+                        <div class="calculation-value" id="battery-savings">RM 115.62</div>
+                    </div>
+                    
+                    <div class="calculation-row">
+                        <div class="calculation-explanation">
+                            <strong>ATAP Export Credit (SMP Rate):</strong>
+                            <div class="calculation-formula">
+                                Formula: <span class="formula-highlight">Exported Solar × SMP Rate</span><br>
+                                Example: 369.63 kWh × RM 0.20/kWh = RM 73.93
+                            </div>
+                        </div>
+                        <div class="calculation-value" id="atap-export-credit">RM 73.93</div>
+                    </div>
+                    
+                    <div class="calculation-row total-row">
+                        <div class="calculation-explanation">
+                            <strong>Total Savings from Solar (ATAP):</strong>
+                            <div class="calculation-formula">
+                                Formula: <span class="formula-highlight">Direct Savings + Battery Savings + Export Credit</span><br>
+                                Example: RM 119.73 + RM 115.62 + RM 73.93 = RM 309.28
+                            </div>
+                        </div>
+                        <div class="calculation-value" id="total-savings">RM 309.28</div>
+                    </div>
+                </div>
+                <div class="input-hint" style="margin-top: 10px;">
+                    <strong>Note:</strong> In ATAP scheme, exported solar is credited at SMP rate (not used to offset energy, capacity, or network charges)
+                </div>
+            </div>
+            
+            <div class="savings-summary">
+                <h3 class="bill-section-title">Savings Summary</h3>
+                <table class="bill-table">
+                    <tbody>
+                        <tr>
+                            <td>Original Bill (without solar):</td>
+                            <td class="text-right" id="original-bill">RM 344.23</td>
+                        </tr>
+                        <tr>
+                            <td>Total Savings (ATAP):</td>
+                            <td class="text-right" id="total-savings-summary">RM 309.28</td>
+                        </tr>
+                        <tr>
+                            <td>Final Bill:</td>
+                            <td class="text-right" id="final-bill">RM 34.95</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="savings-highlight" id="savings-percentage">
+                    Total Savings Percentage: 89.8%
+                </div>
+            </div>
+        </div>
+        
+        <footer style="text-align: center; margin-top: 30px; color: var(--gray); padding: 15px; border-top: 1px solid var(--light-gray);">
+            <p>© 2025 Solar Energy Calculator. By Hong.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
